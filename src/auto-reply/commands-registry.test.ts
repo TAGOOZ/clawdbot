@@ -20,6 +20,7 @@ describe("commands registry", () => {
     const specs = listNativeCommandSpecs();
     expect(specs.find((spec) => spec.name === "help")).toBeTruthy();
     expect(specs.find((spec) => spec.name === "stop")).toBeTruthy();
+    expect(specs.find((spec) => spec.name === "compact")).toBeFalsy();
   });
 
   it("filters commands based on config flags", () => {
