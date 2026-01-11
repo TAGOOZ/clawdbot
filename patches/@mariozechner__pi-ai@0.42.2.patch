@@ -27,3 +27,46 @@ index 188a8294f26fe1bfe3fb298a7f58e4d8eaf2a529..a3aeb6a7ff53bc4f7f44362adb950b2c
      }));
  }
  function mapStopReason(status) {
+
+diff --git a/dist/providers/openai-responses.js b/dist/providers/openai-responses.js
+index f07085c642b2e2876f3ce01597d0f146592f7d3d..29dba971bb2fb1f5697b6d8d0878050f89d51783 100644
+--- a/dist/providers/openai-responses.js
++++ b/dist/providers/openai-responses.js
+@@ -395,13 +395,15 @@ function convertMessages(model, context) {
+             }
+         }
+         else if (msg.role === "assistant") {
++            const reasoning = [];
+             const output = [];
++            let hasAssistantMessage = false;
+             for (const block of msg.content) {
+                 // Do not submit thinking blocks if the completion had an error (i.e. abort)
+                 if (block.type === "thinking" && msg.stopReason !== "error") {
+                     if (block.thinkingSignature) {
+                         const reasoningItem = JSON.parse(block.thinkingSignature);
+-                        output.push(reasoningItem);
++                        reasoning.push(reasoningItem);
+                     }
+                 }
+                 else if (block.type === "text") {
+@@ -421,6 +423,7 @@ function convertMessages(model, context) {
+                         status: "completed",
+                         id: msgId,
+                     });
++                    hasAssistantMessage = true;
+                     // Do not submit toolcall blocks if the completion had an error (i.e. abort)
+                 }
+                 else if (block.type === "toolCall" && msg.stopReason !== "error") {
+@@ -434,9 +437,10 @@ function convertMessages(model, context) {
+                     });
+                 }
+             }
+-            if (output.length === 0)
++            const merged = hasAssistantMessage ? [...reasoning, ...output] : output;
++            if (merged.length === 0)
+                 continue;
+-            messages.push(...output);
++            messages.push(...merged);
+         }
+         else if (msg.role === "toolResult") {
+             // Extract text and image content
