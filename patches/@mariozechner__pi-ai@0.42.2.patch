@@ -27,7 +27,6 @@ index 188a8294f26fe1bfe3fb298a7f58e4d8eaf2a529..a3aeb6a7ff53bc4f7f44362adb950b2c
      }));
  }
  function mapStopReason(status) {
-
 diff --git a/dist/providers/openai-responses.js b/dist/providers/openai-responses.js
 index f07085c642b2e2876f3ce01597d0f146592f7d3d..29dba971bb2fb1f5697b6d8d0878050f89d51783 100644
 --- a/dist/providers/openai-responses.js
